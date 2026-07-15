@@ -13,6 +13,7 @@ import 'package:newapp/constants/app.dart';
 import 'package:newapp/home.dart';
 import 'package:newapp/screens/browse_files.dart';
 import 'package:newapp/screens/add_note.dart';
+import 'package:newapp/screens/view_notes.dart';
 final _scaffoldController = SolidScaffoldController();
 
 const appScaffold = AppScaffold();
@@ -79,6 +80,18 @@ class AppScaffold extends StatelessWidget {
 
             ''',
           child: AddNote(),
+        ),
+        SolidMenuItem(
+          icon: Icons.notes,
+          title: 'View Notes',
+          tooltip: '''
+
+            **View Notes**
+
+            Tap here to read back the notes you have saved to your POD.
+
+            ''',
+          child: ViewNotes(),
         ),
       ],
       appBar: SolidAppBarConfig(
