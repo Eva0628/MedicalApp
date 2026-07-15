@@ -15,6 +15,7 @@ import 'package:newapp/screens/add_note.dart';
 import 'package:newapp/screens/add_health_record.dart';
 import 'package:newapp/screens/appointments.dart';
 import 'package:newapp/screens/health_dashboard.dart';
+import 'package:newapp/screens/health_timeline.dart';
 import 'package:newapp/screens/view_notes.dart';
 
 final _scaffoldController = SolidScaffoldController();
@@ -96,6 +97,19 @@ class AppScaffold extends StatelessWidget {
 
             ''',
           child: AddHealthRecord(),
+        ),
+        SolidMenuItem(
+          icon: Icons.timeline,
+          title: 'Health Timeline',
+          tooltip: '''
+
+            **Health Timeline**
+
+            Tap here to view medications, lab/symptom trends and a medication
+            history timeline.
+
+            ''',
+          child: HealthTimelineScreen(),
         ),
         SolidMenuItem(
           icon: Icons.notes,
