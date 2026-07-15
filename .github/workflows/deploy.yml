@@ -1,0 +1,43 @@
+name: Deploy Flutter Web to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # 触发构建的分支，如果你使用的是 master 请改为 master
+
+permissions:
+  contents: write # 赋予 Actions 写入分支的权限，用于创建和推送 gh-pages 分支
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'oracle'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+        working-directory: newapp # 指定在子目录 newapp 下运行
+
+      - name: Build Flutter Web
+        # 注意：--base-href 必须与你的仓库名保持一致，即 "/MedicalApp/"
+        run: flutter build web --base-href "/MedicalApp/"
+        working-directory: newapp # 指定在子目录 newapp 下运行
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: newapp/build/web # 指向 Flutter 打包生成的 Web 目录
+          branch: gh-pages # 自动将打包内容推送到此分支

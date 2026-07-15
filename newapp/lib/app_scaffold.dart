@@ -14,7 +14,9 @@ import 'package:newapp/screens/browse_files.dart';
 import 'package:newapp/screens/add_note.dart';
 import 'package:newapp/screens/add_health_record.dart';
 import 'package:newapp/screens/appointments.dart';
+import 'package:newapp/screens/dataset_dashboard.dart';
 import 'package:newapp/screens/health_dashboard.dart';
+import 'package:newapp/screens/health_prediction.dart';
 import 'package:newapp/screens/health_score_calculator.dart';
 import 'package:newapp/screens/health_timeline.dart';
 import 'package:newapp/screens/view_notes.dart';
@@ -124,6 +126,32 @@ class AppScaffold extends StatelessWidget {
 
             ''',
           child: HealthScoreCalculator(),
+        ),
+        SolidMenuItem(
+          icon: Icons.insights,
+          title: 'Risk Prediction',
+          tooltip: '''
+
+            **Risk Prediction**
+
+            Tap here to predict a health-risk score from your most recent
+            record, grounded against the sample healthcare dataset cohort.
+
+            ''',
+          child: HealthPrediction(),
+        ),
+        SolidMenuItem(
+          icon: Icons.bar_chart,
+          title: 'Population Insights',
+          tooltip: '''
+
+            **Population Insights**
+
+            Tap here to explore the bundled healthcare dataset: patient counts,
+            test results, billing and age distributions.
+
+            ''',
+          child: DatasetDashboard(),
         ),
         SolidMenuItem(
           icon: Icons.notes,

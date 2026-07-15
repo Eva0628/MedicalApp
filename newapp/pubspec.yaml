@@ -16,6 +16,8 @@ environment:
 #   flutter pub outdated
 
 dependencies:
+  csv: ^8.0.0
+  fl_chart: ^1.2.0
   flutter:
     sdk: flutter
   solidpod: ^1.0.13
@@ -32,6 +34,7 @@ flutter:
   assets:
     - assets/images/app_icon.png
     - assets/images/app_image.jpg
+    - assets/data/healthcare_dataset.csv
   uses-material-design: true
 
 # Define launcher icons for all platforms (except Linux) so the app icons can
