@@ -1,0 +1,121 @@
+/// Newapp - app-wide constants.
+///
+/// This file was generated from the `solidui` app template
+/// (`dart run solidui:create`). Edit it freely to suit your app.
+
+library;
+
+import 'package:flutter/foundation.dart' show kIsWeb;
+
+import 'package:solidui/solidui.dart'
+    show SolidFileUploadConfig, SolidInviteOthersConfig;
+
+/// Application title displayed as the window title.
+
+const String appTitle = 'Newapp - File Browser for Solid Pods';
+
+// ── Solid app registration ───────────────────────────────────────────────────
+
+/// Solid OIDC client registration for Newapp.
+///
+/// These values identify the app to the Solid server during login. They are
+/// gathered here so you can update them in one place when you deploy to your
+/// own infrastructure.
+///
+/// [appClientId] MUST resolve to a publicly hosted client profile document
+/// (the `client-profile.jsonld` generated in the project root) whose
+/// `redirect_uris` and `post_logout_redirect_uris` list exactly the URIs
+/// resolved below. If they do not match, the identity provider will reject the
+/// login. The recommended host is GitHub Pages served from the repository root
+/// (so a push auto-updates it) — replace `your-org` with your GitHub user or
+/// organisation and enable Pages for the repo. See the README and
+/// https://solidproject.org for more information.
+///
+/// Note: the custom redirect scheme drops underscores from the project name
+/// ('com.example.newapp'), because a URI scheme may not contain
+/// underscores. Every other identifier keeps the full project name.
+
+const String appClientId =
+    'https://Eva0628.github.io/MedicalApp/client-profile.jsonld';
+
+/// One redirect URI per platform; SolidUI's `pickRedirectUri` selects the right
+/// one at runtime. Keep this list in step with the `redirect_uris` in the
+/// hosted client profile document.
+///
+/// On web the chosen redirect MUST be same-origin as wherever the app is
+/// served, because `redirect.html` hands the auth response back through a
+/// same-origin `BroadcastChannel`; any origin mismatch leaves login hanging on
+/// the loading spinner. `pickRedirectUri` does NOT match on origin — it just
+/// takes the first `https://` entry — so we derive the web entry from
+/// `Uri.base.origin` at runtime instead of hard-coding it. That yields the
+/// deployed https host in production, and `http://localhost:4400/redirect.html`
+/// under `flutter run -d chrome --web-port=4400`. Off the web the list is
+/// static: the custom scheme serves Android/iOS/macOS and the loopback entry
+/// serves Windows/Linux.
+
+List<String> get appRedirectUris => kIsWeb
+    ? ['${Uri.base.origin}/redirect.html']
+    : const [
+        'com.example.newapp://redirect',
+        'http://localhost:4400/redirect.html',
+      ];
+
+/// Where the identity provider returns the user after logging out. By default
+/// we reuse the login redirect URIs, mirroring the hosted client profile.
+
+List<String> get appPostLogoutRedirectUris => appRedirectUris;
+
+/// The application folder created on the user's POD to store Newapp data.
+
+const String appPodDirectory = 'newapp';
+
+/// Homepage opened from the login page's info button. Point this at your own
+/// project page or documentation.
+
+const String appLink = 'https://github.com/example/newapp';
+
+/// Shared upload configuration for every `SolidFile` view in Newapp.
+///
+/// Restricts the file picker (both the toolbar Upload button and the side
+/// upload panel) to Markdown and plain text files. Extensions are matched
+/// case-insensitively by SolidUI, so users may still pick `.MD` / `.TXT`.
+/// Adjust `allowedExtensions` to suit the file types your app manages.
+
+const SolidFileUploadConfig appUploadConfig = SolidFileUploadConfig(
+  allowedExtensions: ['md', 'txt'],
+);
+
+/// Public URL where Newapp is hosted. Used by the Invite Others
+/// feature to send a working link to the recipient.
+
+const String appUrl = 'https://newapp.solidcommunity.au/';
+
+/// Application-wide Invite Others configuration shared by the
+/// AppBar share button and the App Info dialog so that users can
+/// invite others to set up their POD and try Newapp.
+
+const SolidInviteOthersConfig inviteOthersConfig = SolidInviteOthersConfig(
+  applicationName: 'Newapp',
+  appUrl: appUrl,
+  appDescription:
+      'manage/share resources hosted on your Solid server using Newapp',
+  messageTemplate: '''
+You might like to try the {appName} app, available online here:
+
+{appUrl}
+
+Signing into {appName} will set up your data vault so you can manage and
+exchange files privately with other Solid users.
+
+''',
+  subject: 'Try the Newapp app on your Solid POD',
+  tooltip: '''
+
+  **Invite Others**
+
+  Tap to invite someone else to try Newapp. You can copy the
+  invitation to the clipboard or share it through any messaging app
+  installed on your device.
+
+  ''',
+);

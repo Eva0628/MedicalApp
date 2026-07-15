@@ -1,0 +1,112 @@
+# Newapp
+
+Newapp - manage files on your personal online data store (POD).
+
+This app was generated from the [`solidui`](https://pub.dev/packages/solidui)
+app template — a Solid Pod file browser built with the
+[`solidui`](https://pub.dev/packages/solidui) widget set. It comes ready with:
+
+- a [`SolidLogin`] screen that connects to the user's data vault on their
+  chosen Solid server;
+- a [`SolidScaffold`] with a navigation rail (collapsing to a drawer on narrow
+  screens) and a status bar showing the server, login and security-key state;
+- a [`SolidFile`] browser for both the app's own folder and the whole POD;
+- theme switching, an About dialog and an Invite Others action.
+
+## Getting started
+
+```bash
+flutter pub get
+flutter run
+```
+
+## Next steps
+
+A few values were filled in with placeholders when this project was generated.
+Update them for your own deployment:
+
+- **Solid app registration** in `lib/constants/app.dart` — `appClientId`,
+  `appRedirectUris`, `appPostLogoutRedirectUris` and `appLink`, passed to
+  `SolidLogin` from `lib/app.dart`. These identify your app to the Solid server
+  during login. **The `appClientId` URL must actually resolve to a Client
+  Identifier Document (a `client-profile.jsonld`) that lists these exact
+  redirect URIs.** Until you publish that document (and list your
+  `com.example.newapp://redirect` scheme in it), the identity provider has
+  no client to validate and the login page will not appear — this is the most
+  common reason a freshly generated app cannot reach the login screen. See the
+  [Solid-OIDC client identifiers](https://solidproject.org/TR/oidc#clientids)
+  documentation.
+- **App constants** in `lib/constants/app.dart` — the title, hosting URL and
+  the Invite Others message.
+- **Allowed upload types** in `lib/constants/app.dart` — `appUploadConfig`
+  currently restricts uploads to `.md` and `.txt`; widen `allowedExtensions`
+  to suit your app.
+- **Icons** in `assets/images/` — replace `app_icon.png` and `app_image.jpg`,
+  then run `dart run flutter_launcher_icons` to regenerate platform icons.
+
+## Login (OIDC) setup
+
+> **Required before login works:** publish this app's Client Identifier
+> Document. The identity provider fetches your `clientId` URL to learn which
+> `redirect_uris` are allowed; if it is missing the login is cancelled after the
+> consent screen (`ASWebAuthenticationSession Code=1`). Two files were generated
+> for this: `client-profile.jsonld` in the project **root** and `redirect.html`
+> in the **`web/`** folder.
+
+### Where to publish the two files
+
+- **`client-profile.jsonld` → GitHub Pages (the `clientId`).** It lives in the
+  repository root so that, once you enable GitHub Pages for the repo (Settings →
+  Pages → Deploy from a branch → `main` / `/root`), it is served at
+  `https://<your-org>.github.io/newapp/client-profile.jsonld` and is
+  re-published automatically on every push. Set `appClientId` in
+  `lib/constants/app.dart` (and the document's own `client_id` field) to that
+  exact URL — the two must match, and the `.jsonld` must be publicly readable
+  (HTTP 200, no auth).
+- **`redirect.html` → your web host.** It sits in `web/`, so `flutter build web`
+  (and a `make web` deploy) publishes it alongside the app, e.g. at
+  `https://newapp.solidcommunity.au/redirect.html`. The web build reads
+  its redirect from `Uri.base.origin` at runtime, so the redirect is always
+  same-origin with wherever the app is served — the deployed host in production
+  and `http://localhost:4400` when you run
+  `flutter run -d chrome --web-port=4400`. Both origins must be listed in the
+  published `client-profile.jsonld`.
+
+Verify the document is reachable:
+
+```bash
+curl -I https://<your-org>.github.io/newapp/client-profile.jsonld   # expect 200
+```
+
+The OIDC redirect is pre-wired so that login works on every platform:
+
+- **macOS** — `macos/Runner/*.entitlements` grant `network.client` (so the
+  login web session can open), keychain access (for token storage) and
+  user-selected file access (for uploads/downloads).
+- **Android** — `android/app/build.gradle.kts` sets the `appAuthRedirectScheme`
+  manifest placeholder.
+- **iOS** — `ios/Runner/Info.plist` registers the custom URL scheme.
+
+Because the macOS/iOS apps now request keychain and sandbox capabilities, you
+must enable signing once: open `macos/Runner.xcworkspace` (or
+`ios/Runner.xcworkspace`) in Xcode and pick your team under **Signing &
+Capabilities**, or run `flutter run` with a configured Apple developer account.
+
+## Project layout
+
+```
+client-profile.jsonld  Solid-OIDC client document; publish via GitHub Pages
+                       from the repo root (this is your clientId — see Login
+                       setup).
+lib/
+  main.dart            Application entry point and desktop window setup.
+  app.dart             Root widget; wraps the app in SolidLogin.
+  app_scaffold.dart    SolidScaffold with the nav bar, status bar and menu.
+  home.dart            Introductory home page.
+  constants/app.dart   App-wide constants (title, upload and invite configs).
+  screens/
+    browse_files.dart  Whole-POD file browser (SolidFile at the root).
+web/
+  redirect.html        Web/post-logout redirect helper; published with the web
+                       build (see Login setup).
+```
