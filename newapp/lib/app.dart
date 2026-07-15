@@ -37,7 +37,7 @@ class App extends StatelessWidget {
       ),
 
       home: SolidLogin(
-        title: appTitle.replaceAll(' - ', '\n'),
+        title: 'BioPod\nYour Health Data, Your POD',
         image: const AssetImage('assets/images/app_image.jpg'),
         logo: const AssetImage('assets/images/app_icon.png'),
 

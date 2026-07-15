@@ -77,12 +77,15 @@ const String appLink = 'https://github.com/example/newapp';
 /// Shared upload configuration for every `SolidFile` view in Newapp.
 ///
 /// Restricts the file picker (both the toolbar Upload button and the side
-/// upload panel) to Markdown and plain text files. Extensions are matched
-/// case-insensitively by SolidUI, so users may still pick `.MD` / `.TXT`.
-/// Adjust `allowedExtensions` to suit the file types your app manages.
+/// upload panel) to Markdown, plain text and Turtle files. Extensions are
+/// matched case-insensitively by SolidUI, so users may still pick `.MD` /
+/// `.TXT` / `.TTL`. `.ttl` is allowed so that encrypted health records
+/// (`health_record_*.json.enc.ttl`) exported from this app can be re-imported
+/// into the POD via the file browser. Adjust `allowedExtensions` to suit the
+/// file types your app manages.
 
 const SolidFileUploadConfig appUploadConfig = SolidFileUploadConfig(
-  allowedExtensions: ['md', 'txt'],
+  allowedExtensions: ['md', 'txt', 'ttl'],
 );
 
 /// Public URL where Newapp is hosted. Used by the Invite Others

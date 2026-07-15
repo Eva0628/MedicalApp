@@ -10,10 +10,12 @@ import 'package:flutter/material.dart';
 import 'package:solidui/solidui.dart';
 
 import 'package:newapp/constants/app.dart';
-import 'package:newapp/home.dart';
 import 'package:newapp/screens/browse_files.dart';
 import 'package:newapp/screens/add_note.dart';
+import 'package:newapp/screens/add_health_record.dart';
+import 'package:newapp/screens/health_dashboard.dart';
 import 'package:newapp/screens/view_notes.dart';
+
 final _scaffoldController = SolidScaffoldController();
 
 const appScaffold = AppScaffold();
@@ -40,10 +42,11 @@ class AppScaffold extends StatelessWidget {
 
             **Home**
 
-            Tap here to return to the main page for the app.
+            Your health dashboard: summary stats, trend graphs and record
+            history read from your POD.
 
             ''',
-          child: Home(title: appTitle),
+          child: HealthDashboard(),
         ),
         SolidMenuItem(
           icon: Icons.folder,
@@ -80,6 +83,18 @@ class AppScaffold extends StatelessWidget {
 
             ''',
           child: AddNote(),
+        ),
+        SolidMenuItem(
+          icon: Icons.monitor_heart,
+          title: 'Add Health Record',
+          tooltip: '''
+
+            **Add Health Record**
+
+            Tap here to record health metrics to your POD, encrypted.
+
+            ''',
+          child: AddHealthRecord(),
         ),
         SolidMenuItem(
           icon: Icons.notes,
@@ -164,7 +179,7 @@ class AppScaffold extends StatelessWidget {
         showInAppBarActions: true,
       ),
       inviteConfig: inviteOthersConfig,
-      child: const Home(title: appTitle),
+      child: const HealthDashboard(),
     );
   }
 }
