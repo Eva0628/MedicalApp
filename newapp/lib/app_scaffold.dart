@@ -13,6 +13,7 @@ import 'package:newapp/constants/app.dart';
 import 'package:newapp/screens/browse_files.dart';
 import 'package:newapp/screens/add_note.dart';
 import 'package:newapp/screens/add_health_record.dart';
+import 'package:newapp/screens/appointments.dart';
 import 'package:newapp/screens/health_dashboard.dart';
 import 'package:newapp/screens/view_notes.dart';
 
@@ -107,6 +108,18 @@ class AppScaffold extends StatelessWidget {
 
             ''',
           child: ViewNotes(),
+        ),
+        SolidMenuItem(
+          icon: Icons.event_available,
+          title: 'Appointments',
+          tooltip: '''
+
+            **Appointments**
+
+            Tap here to view your upcoming and past medical appointments.
+
+            ''',
+          child: AppointmentsScreen(),
         ),
       ],
       appBar: SolidAppBarConfig(
