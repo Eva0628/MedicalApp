@@ -15,6 +15,7 @@ import 'package:newapp/screens/add_note.dart';
 import 'package:newapp/screens/add_health_record.dart';
 import 'package:newapp/screens/appointments.dart';
 import 'package:newapp/screens/health_dashboard.dart';
+import 'package:newapp/screens/health_score_calculator.dart';
 import 'package:newapp/screens/health_timeline.dart';
 import 'package:newapp/screens/view_notes.dart';
 
@@ -110,6 +111,19 @@ class AppScaffold extends StatelessWidget {
 
             ''',
           child: HealthTimelineScreen(),
+        ),
+        SolidMenuItem(
+          icon: Icons.calculate,
+          title: 'Health Score',
+          tooltip: '''
+
+            **Health Score**
+
+            Tap here to calculate a quick 0-100 wellbeing score from your
+            recent lifestyle metrics.
+
+            ''',
+          child: HealthScoreCalculator(),
         ),
         SolidMenuItem(
           icon: Icons.notes,
