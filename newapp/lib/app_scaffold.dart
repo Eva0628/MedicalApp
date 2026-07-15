@@ -1,4 +1,4 @@
-/// Newapp - the primary application scaffold.
+/// BioPod - the primary application scaffold.
 ///
 /// This file was generated from the `solidui` app template
 /// (`dart run solidui:create`). Edit it freely to suit your app.
@@ -186,12 +186,12 @@ class AppScaffold extends StatelessWidget {
         ),
         applicationLegalese: '''
 
-        © Newapp
+        © BioPod
 
         ''',
         text: '''
 
-        Newapp is a file browser application that allows you to manage
+        BioPod is a file browser application that allows you to manage
         files on your personal online data store (Pod) hosted on a Solid
         server.
 

@@ -1,7 +1,7 @@
 {
   "@context": "https://www.w3.org/ns/solid/oidc-context.jsonld",
   "client_id": "https://Eva0628.github.io/MedicalApp/client-profile.jsonld",
-  "client_name": "Newapp",
+  "client_name": "BioPod",
   "application_type": "native",
   "redirect_uris": [
     "https://Eva0628.github.io/MedicalApp/redirect.html",

@@ -1,4 +1,4 @@
-/// Newapp - main entry point for the application.
+/// BioPod - main entry point for the application.
 ///
 /// This file was generated from the `solidui` app template
 /// (`dart run solidui:create`). Edit it freely to suit your app.

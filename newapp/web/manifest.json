@@ -1,6 +1,6 @@
 {
-    "name": "newapp",
-    "short_name": "newapp",
+    "name": "BioPod",
+    "short_name": "BioPod",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -1,4 +1,4 @@
-/// Newapp - app-wide constants.
+/// BioPod - app-wide constants.
 ///
 /// This file was generated from the `solidui` app template
 /// (`dart run solidui:create`). Edit it freely to suit your app.
@@ -12,11 +12,11 @@ import 'package:solidui/solidui.dart'
 
 /// Application title displayed as the window title.
 
-const String appTitle = 'Newapp - File Browser for Solid Pods';
+const String appTitle = 'BioPod - File Browser for Solid Pods';
 
 // ── Solid app registration ───────────────────────────────────────────────────
 
-/// Solid OIDC client registration for Newapp.
+/// Solid OIDC client registration for BioPod.
 ///
 /// These values identify the app to the Solid server during login. They are
 /// gathered here so you can update them in one place when you deploy to your
@@ -65,7 +65,7 @@ List<String> get appRedirectUris => kIsWeb
 
 List<String> get appPostLogoutRedirectUris => appRedirectUris;
 
-/// The application folder created on the user's POD to store Newapp data.
+/// The application folder created on the user's POD to store BioPod data.
 
 const String appPodDirectory = 'newapp';
 
@@ -74,7 +74,7 @@ const String appPodDirectory = 'newapp';
 
 const String appLink = 'https://github.com/example/newapp';
 
-/// Shared upload configuration for every `SolidFile` view in Newapp.
+/// Shared upload configuration for every `SolidFile` view in BioPod.
 ///
 /// Restricts the file picker (both the toolbar Upload button and the side
 /// upload panel) to Markdown, plain text and Turtle files. Extensions are
@@ -88,20 +88,20 @@ const SolidFileUploadConfig appUploadConfig = SolidFileUploadConfig(
   allowedExtensions: ['md', 'txt', 'ttl'],
 );
 
-/// Public URL where Newapp is hosted. Used by the Invite Others
+/// Public URL where BioPod is hosted. Used by the Invite Others
 /// feature to send a working link to the recipient.
 
 const String appUrl = 'https://newapp.solidcommunity.au/';
 
 /// Application-wide Invite Others configuration shared by the
 /// AppBar share button and the App Info dialog so that users can
-/// invite others to set up their POD and try Newapp.
+/// invite others to set up their POD and try BioPod.
 
 const SolidInviteOthersConfig inviteOthersConfig = SolidInviteOthersConfig(
-  applicationName: 'Newapp',
+  applicationName: 'BioPod',
   appUrl: appUrl,
   appDescription:
-      'manage/share resources hosted on your Solid server using Newapp',
+      'manage/share resources hosted on your Solid server using BioPod',
   messageTemplate: '''
 You might like to try the {appName} app, available online here:
 
@@ -111,12 +111,12 @@ Signing into {appName} will set up your data vault so you can manage and
 exchange files privately with other Solid users.
 
 ''',
-  subject: 'Try the Newapp app on your Solid POD',
+  subject: 'Try the BioPod app on your Solid POD',
   tooltip: '''
 
   **Invite Others**
 
-  Tap to invite someone else to try Newapp. You can copy the
+  Tap to invite someone else to try BioPod. You can copy the
   invitation to the clipboard or share it through any messaging app
   installed on your device.
 

@@ -176,18 +176,41 @@ class _HealthScoreCalculatorState extends State<HealthScoreCalculator> {
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 560),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildForm(context),
-                if (_rawScore != null) ...[
-                  const SizedBox(height: 24),
-                  _buildResult(context, _rawScore!),
-                ],
-              ],
-            ),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final hasResult = _rawScore != null;
+
+              // Split into two columns — form on the left, result on the right —
+              // once there's a result and the window is wide enough. Otherwise
+              // fall back to a single stacked column on narrow screens.
+              if (hasResult && constraints.maxWidth >= 900) {
+                return ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1120),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: _buildForm(context)),
+                      const SizedBox(width: 24),
+                      Expanded(child: _buildResult(context, _rawScore!)),
+                    ],
+                  ),
+                );
+              }
+
+              return ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 560),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildForm(context),
+                    if (hasResult) ...[
+                      const SizedBox(height: 24),
+                      _buildResult(context, _rawScore!),
+                    ],
+                  ],
+                ),
+              );
+            },
           ),
         ),
       ),

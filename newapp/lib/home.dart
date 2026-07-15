@@ -1,4 +1,4 @@
-/// Newapp - the application introductory home page.
+/// BioPod - the application introductory home page.
 ///
 /// This file was generated from the `solidui` app template
 /// (`dart run solidui:create`). Edit it freely to suit your app.
@@ -42,9 +42,9 @@ class _HomeState extends State<Home> {
                 const SizedBox(height: 24),
                 Text(
                   '''
-Welcome to Newapp!
+Welcome to BioPod!
 
-Newapp is a Solid file browser that lets you manage
+BioPod is a Solid file browser that lets you manage
 files on your personal online data store (POD).
 
 Key features:

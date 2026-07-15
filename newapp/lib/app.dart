@@ -1,4 +1,4 @@
-/// Newapp - orchestrate the primary login widget.
+/// BioPod - orchestrate the primary login widget.
 ///
 /// This file was generated from the `solidui` app template
 /// (`dart run solidui:create`). Edit it freely to suit your app.

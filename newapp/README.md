@@ -1,6 +1,6 @@
-# Newapp
+# BioPod
 
-Newapp - manage files on your personal online data store (POD).
+BioPod - manage files on your personal online data store (POD).
 
 This app was generated from the [`solidui`](https://pub.dev/packages/solidui)
 app template — a Solid Pod file browser built with the

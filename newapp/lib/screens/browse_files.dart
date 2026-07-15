@@ -1,4 +1,4 @@
-/// Newapp - display all folders from the root of a user's pod.
+/// BioPod - display all folders from the root of a user's pod.
 ///
 /// This file was generated from the `solidui` app template
 /// (`dart run solidui:create`). Edit it freely to suit your app.
