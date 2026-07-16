@@ -1,3 +1,8 @@
+// DISABLED FOR DEMO/JUDGING: this fictional Jasmine Alvarez seed importer is
+// commented out so judges test with their own POD data only. To re-enable it,
+// remove the `/*` below and the matching `*/` at the end of the file, and
+// restore its import + menu item in `app_scaffold.dart`.
+/*
 /// TEMPORARY demo-data importer for Jasmine Alvarez (fictional patient).
 ///
 /// Writes a dense health-record history straight to the logged-in user's POD
@@ -23,13 +28,22 @@
 /// readable by Health Dashboard / Health Timeline afterwards -- nothing here
 /// is faked or pre-encrypted outside the app.
 ///
-/// HOW TO USE
-/// 1. Drop this file in `newapp/lib/screens/`.
-/// 2. Add a temporary menu item in `app_scaffold.dart` pointing to
-///    `SeedJasmineData()` (see snippet in the accompanying message).
-/// 3. Log in, tap the menu item, tap "Import Records".
-/// 4. Once done, DELETE this file and the menu item -- it is demo-only and
-///    should not ship in the submitted app.
+/// TWO USES
+/// A. `jasmineAlvarezRecords` (the data list) is imported by
+///    `health_dashboard.dart` as the demo fallback: when the POD has no real
+///    records yet, the Home dashboard renders this list in-memory. So do NOT
+///    delete the whole file -- the dashboard depends on this list.
+/// B. `SeedJasmineData` (the widget below) optionally writes these records to
+///    the POD for real, via `writePod(encrypted: true)`, so they persist and
+///    show up in View Records / Risk Prediction too.
+///
+/// HOW TO USE THE IMPORTER (optional)
+/// 1. Add a temporary menu item in `app_scaffold.dart` pointing to
+///    `SeedJasmineData()`.
+/// 2. Log in, tap the menu item, tap "Import Records".
+/// 3. Before shipping, remove the `SeedJasmineData` widget + its menu item if
+///    you don't want the POD-import path -- but keep `jasmineAlvarezRecords`
+///    (or move it out) as long as the dashboard fallback uses it.
 
 library;
 
@@ -272,3 +286,4 @@ class _SeedJasmineDataState extends State<SeedJasmineData> {
     );
   }
 }
+*/

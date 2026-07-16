@@ -5,67 +5,149 @@
 /// returns a body-only widget (no top-level [AppBar]); the scaffold supplies
 /// the app bar.
 ///
-/// The data comes from [samplePatient] in `patient_data.dart` — fictional,
-/// in-memory sample data, so this page works without any POD `.ttl` file to
-/// import. Swap it for records read back from the POD once you have real data.
+/// The data is the user's own profile, read back (encrypted) from their Solid
+/// Pod — see `manage_patient_profile.dart` for the editor that writes it. When
+/// no profile has been saved yet, an empty state prompts the user to add one.
+/// There is no fictional sample data.
 ///
 /// No external chart package required — charts are drawn with CustomPainter.
 library;
 
 import 'package:flutter/material.dart';
 
+import 'package:solidpod/solidpod.dart';
+
+import 'package:newapp/screens/manage_patient_profile.dart';
 import 'package:newapp/screens/patient_data.dart';
 
-class HealthTimelineScreen extends StatelessWidget {
-  /// The patient to display. When null, falls back to the fictional
-  /// [samplePatient] (keeps the constructor const-friendly).
-  final PatientProfile? patient;
+class HealthTimelineScreen extends StatefulWidget {
+  const HealthTimelineScreen({super.key});
 
-  const HealthTimelineScreen({super.key, this.patient});
+  @override
+  State<HealthTimelineScreen> createState() => _HealthTimelineScreenState();
+}
+
+class _HealthTimelineScreenState extends State<HealthTimelineScreen> {
+  bool _isLoading = true;
+  PatientProfile? _patient;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    setState(() => _isLoading = true);
+    try {
+      final profile = await loadPatientProfile(context, widget);
+      if (!mounted) return;
+      setState(() => _patient = profile);
+    } on NotLoggedInException {
+      _snack('You need to be logged in to view your timeline.');
+    } on AccessForbiddenException {
+      _snack('Permission denied while reading your profile.');
+    } on Exception catch (e) {
+      _snack('Failed to load your timeline: $e');
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  void _snack(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final patient = this.patient ?? samplePatient;
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        _PatientHeader(patient: patient),
-        const SizedBox(height: 24),
-        const _SectionTitle('Current Medications'),
-        const SizedBox(height: 8),
-        ...patient.currentMedications.map((m) => _MedicationTile(med: m)),
-        const SizedBox(height: 24),
-        const _SectionTitle('TSH Levels (5-Year Trend)'),
-        const SizedBox(height: 8),
-        _ChartCard(
-          child: _LineChart(
-            points: patient.tshHistory
-                .map((r) => ChartPoint(r.date, r.value))
-                .toList(),
-            unit: 'mIU/L',
-            lineColor: const Color(0xFF2E7D6B),
-            referenceMin: 0.4,
-            referenceMax: 4.0,
-            referenceLabel: 'Normal range',
-          ),
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    final patient = _patient;
+    if (patient == null) {
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.timeline,
+              size: 64,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const SizedBox(height: 16),
+            const Text('No health timeline saved yet.'),
+            const SizedBox(height: 8),
+            const Text(
+              'Use "My Health Timeline" to enter your medications, labs\n'
+              'and symptoms, then they will appear here from your POD.',
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            OutlinedButton.icon(
+              onPressed: _load,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Refresh'),
+            ),
+          ],
         ),
-        const SizedBox(height: 24),
-        const _SectionTitle('Migraine Frequency (episodes/month)'),
-        const SizedBox(height: 8),
-        _ChartCard(
-          child: _LineChart(
-            points: patient.migraineFrequency
-                .map((p) => ChartPoint(p.date, p.episodesPerMonth.toDouble()))
-                .toList(),
-            unit: '/mo',
-            lineColor: Colors.deepOrange,
-          ),
-        ),
-        const SizedBox(height: 24),
-        const _SectionTitle('Medication Timeline'),
-        const SizedBox(height: 8),
-        _MedicationTimeline(events: patient.medicationTimeline),
-      ],
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: _load,
+      child: ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(16),
+        children: [
+          _PatientHeader(patient: patient),
+          if (patient.currentMedications.isNotEmpty) ...[
+            const SizedBox(height: 24),
+            const _SectionTitle('Current Medications'),
+            const SizedBox(height: 8),
+            ...patient.currentMedications.map((m) => _MedicationTile(med: m)),
+          ],
+          if (patient.tshHistory.isNotEmpty) ...[
+            const SizedBox(height: 24),
+            const _SectionTitle('Lab Result Trend'),
+            const SizedBox(height: 8),
+            _ChartCard(
+              child: _LineChart(
+                points: patient.tshHistory
+                    .map((r) => ChartPoint(r.date, r.value))
+                    .toList(),
+                unit: patient.tshHistory.first.unit,
+                lineColor: const Color(0xFF2E7D6B),
+              ),
+            ),
+          ],
+          if (patient.migraineFrequency.isNotEmpty) ...[
+            const SizedBox(height: 24),
+            const _SectionTitle('Symptom Frequency (episodes/month)'),
+            const SizedBox(height: 8),
+            _ChartCard(
+              child: _LineChart(
+                points: patient.migraineFrequency
+                    .map(
+                      (p) => ChartPoint(p.date, p.episodesPerMonth.toDouble()),
+                    )
+                    .toList(),
+                unit: '/mo',
+                lineColor: Colors.deepOrange,
+              ),
+            ),
+          ],
+          if (patient.medicationTimeline.isNotEmpty) ...[
+            const SizedBox(height: 24),
+            const _SectionTitle('Medication Timeline'),
+            const SizedBox(height: 8),
+            _MedicationTimeline(events: patient.medicationTimeline),
+          ],
+        ],
+      ),
     );
   }
 }
@@ -231,17 +313,11 @@ class _LineChart extends StatelessWidget {
   final List<ChartPoint> points;
   final String unit;
   final Color lineColor;
-  final double? referenceMin;
-  final double? referenceMax;
-  final String? referenceLabel;
 
   const _LineChart({
     required this.points,
     required this.unit,
     required this.lineColor,
-    this.referenceMin,
-    this.referenceMax,
-    this.referenceLabel,
   });
 
   @override
@@ -253,8 +329,6 @@ class _LineChart extends StatelessWidget {
         lineColor: lineColor,
         gridColor: Theme.of(context).colorScheme.outlineVariant,
         textColor: Theme.of(context).colorScheme.onSurfaceVariant,
-        referenceMin: referenceMin,
-        referenceMax: referenceMax,
       ),
     );
   }
@@ -265,16 +339,12 @@ class _LineChartPainter extends CustomPainter {
   final Color lineColor;
   final Color gridColor;
   final Color textColor;
-  final double? referenceMin;
-  final double? referenceMax;
 
   _LineChartPainter({
     required this.points,
     required this.lineColor,
     required this.gridColor,
     required this.textColor,
-    this.referenceMin,
-    this.referenceMax,
   });
 
   @override
@@ -284,12 +354,6 @@ class _LineChartPainter extends CustomPainter {
     final values = points.map((p) => p.value).toList();
     double minY = values.reduce((a, b) => a < b ? a : b);
     double maxY = values.reduce((a, b) => a > b ? a : b);
-    if (referenceMin != null) {
-      minY = minY < referenceMin! ? minY : referenceMin!;
-    }
-    if (referenceMax != null) {
-      maxY = maxY > referenceMax! ? maxY : referenceMax!;
-    }
     final pad = (maxY - minY) * 0.2 + 0.5;
     minY -= pad;
     maxY += pad;
@@ -321,20 +385,6 @@ class _LineChartPainter extends CustomPainter {
         textDirection: TextDirection.ltr,
       )..layout();
       tp.paint(canvas, Offset(0, y - tp.height / 2));
-    }
-
-    // Reference band (e.g. normal range)
-    if (referenceMin != null && referenceMax != null) {
-      final bandPaint = Paint()..color = lineColor.withValues(alpha: 0.08);
-      canvas.drawRect(
-        Rect.fromLTRB(
-          leftPad,
-          yFor(referenceMax!),
-          size.width,
-          yFor(referenceMin!),
-        ),
-        bandPaint,
-      );
     }
 
     // Line + points

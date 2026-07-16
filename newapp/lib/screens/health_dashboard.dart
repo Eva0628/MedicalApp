@@ -113,12 +113,22 @@ class _HealthDashboardState extends State<HealthDashboard> {
           )
           .toList();
 
+      // Read + decrypt the records in small concurrent batches. Reading a
+      // large history one file at a time is the main cause of a slow first
+      // load; batching cuts the wait dramatically while keeping the number of
+      // simultaneous connections to the Pod server modest.
+      const batchSize = 8;
+      final jsonStrings = <String>[];
+      for (var i = 0; i < fileNames.length; i += batchSize) {
+        final batch = fileNames.skip(i).take(batchSize);
+        jsonStrings.addAll(await Future.wait(batch.map(readPod)));
+      }
+
       final records = <HealthRecord>[];
-      for (final fileName in fileNames) {
-        // Read and decrypt each record, then parse the JSON string back.
-        final jsonString = await readPod(fileName);
-        final data = jsonDecode(jsonString) as Map<String, dynamic>;
-        records.add(HealthRecord.fromJson(fileName, data));
+      for (var i = 0; i < fileNames.length; i++) {
+        // Parse each decrypted JSON string back into a record.
+        final data = jsonDecode(jsonStrings[i]) as Map<String, dynamic>;
+        records.add(HealthRecord.fromJson(fileNames[i], data));
       }
 
       // Show the most recent records first.
@@ -129,7 +139,9 @@ class _HealthDashboardState extends State<HealthDashboard> {
       });
 
       if (!mounted) return;
-      setState(() => _records = records);
+      setState(() {
+        _records = records;
+      });
     } on NotLoggedInException {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(

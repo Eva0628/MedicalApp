@@ -20,7 +20,8 @@ import 'package:newapp/screens/health_prediction.dart';
 import 'package:newapp/screens/health_resources.dart';
 // import 'package:newapp/screens/health_score_calculator.dart';
 import 'package:newapp/screens/health_timeline.dart';
-import 'package:newapp/screens/seed_jasmine_data.dart'; // TEMP: demo-data importer, remove before shipping
+import 'package:newapp/screens/manage_patient_profile.dart';
+// import 'package:newapp/screens/seed_jasmine_data.dart'; // DISABLED: demo-data importer
 import 'package:newapp/screens/view_health_record.dart';
 // import 'package:newapp/screens/view_notes.dart'; // temporarily hidden
 
@@ -197,20 +198,19 @@ class AppScaffold extends StatelessWidget {
             ''',
           child: AddHealthRecord(),
         ),
-        // TEMP: demo-data importer for Jasmine Alvarez. Remove this menu item
-        // (and delete seed_jasmine_data.dart) before submitting the app.
         const SolidMenuItem(
-          icon: Icons.cloud_upload,
-          title: 'Seed Demo Data',
+          icon: Icons.edit_note,
+          title: 'My Health Timeline',
           tooltip: '''
 
-            **Seed Demo Data**
+            **My Health Timeline**
 
-            TEMPORARY: import ~81 fictional health records for Jasmine Alvarez
-            so the dashboard trends look full. Remove before shipping.
+            Tap here to enter your profile, medications, lab results and
+            symptoms. Saved encrypted to your POD and shown on the Health
+            Timeline page.
 
             ''',
-          child: SeedJasmineData(),
+          child: ManagePatientProfile(),
         ),
         SolidMenuItem(
           icon: Icons.help_outline,

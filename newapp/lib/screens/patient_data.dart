@@ -1,11 +1,17 @@
-/// FICTIONAL PROTOTYPE DATA — not a real patient. Used to demo the app's
-/// medication timeline / trend graphs on the Health Timeline page.
+/// Data models for the Health Timeline page.
 ///
-/// This is in-memory sample data, so the Health Timeline page works without any
-/// POD `.ttl` file to import. Swap [samplePatient] for records read back from
-/// the POD (see `health_dashboard.dart` / `view_notes.dart` for the read flow)
-/// once you have real data.
+/// These describe a patient profile — demographics, current medications, a
+/// medication-change timeline, and two example trend series (a lab result and a
+/// symptom frequency). Instances are persisted to the user's Solid Pod as a
+/// single encrypted JSON file by `manage_patient_profile.dart` and read back by
+/// `health_timeline.dart`.
+///
+/// There is NO bundled sample patient any more — the app shows only the data the
+/// user has entered and saved to their own POD.
 library;
+
+/// Canonical POD file name for the single patient-profile document.
+const String kPatientProfileFileName = 'patient_profile.json.enc.ttl';
 
 class PatientProfile {
   final String name;
@@ -31,6 +37,48 @@ class PatientProfile {
     required this.tshHistory,
     required this.migraineFrequency,
   });
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'age': age,
+        'gender': gender,
+        'heightCm': heightCm,
+        'weightKg': weightKg,
+        'conditions': conditions,
+        'currentMedications':
+            currentMedications.map((m) => m.toJson()).toList(),
+        'medicationTimeline':
+            medicationTimeline.map((e) => e.toJson()).toList(),
+        'tshHistory': tshHistory.map((r) => r.toJson()).toList(),
+        'migraineFrequency':
+            migraineFrequency.map((p) => p.toJson()).toList(),
+      };
+
+  factory PatientProfile.fromJson(Map<String, dynamic> j) {
+    double toDouble(Object? v) => v == null ? 0 : (v as num).toDouble();
+    int toInt(Object? v) => v == null ? 0 : (v as num).toInt();
+    List<T> list<T>(Object? v, T Function(Map<String, dynamic>) f) =>
+        (v as List<dynamic>? ?? const [])
+            .map((e) => f(e as Map<String, dynamic>))
+            .toList();
+
+    return PatientProfile(
+      name: (j['name'] as String?) ?? '',
+      age: toInt(j['age']),
+      gender: (j['gender'] as String?) ?? '',
+      heightCm: toDouble(j['heightCm']),
+      weightKg: toDouble(j['weightKg']),
+      conditions: (j['conditions'] as List<dynamic>? ?? const [])
+          .map((e) => e.toString())
+          .toList(),
+      currentMedications: list(j['currentMedications'], Medication.fromJson),
+      medicationTimeline:
+          list(j['medicationTimeline'], MedicationEvent.fromJson),
+      tshHistory: list(j['tshHistory'], LabResult.fromJson),
+      migraineFrequency:
+          list(j['migraineFrequency'], SymptomFrequencyPoint.fromJson),
+    );
+  }
 }
 
 class Medication {
@@ -47,6 +95,23 @@ class Medication {
     required this.purpose,
     this.maxInstructions,
   });
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'dose': dose,
+        'frequency': frequency,
+        'purpose': purpose,
+        if (maxInstructions != null && maxInstructions!.isNotEmpty)
+          'maxInstructions': maxInstructions,
+      };
+
+  factory Medication.fromJson(Map<String, dynamic> j) => Medication(
+        name: (j['name'] as String?) ?? '',
+        dose: (j['dose'] as String?) ?? '',
+        frequency: (j['frequency'] as String?) ?? '',
+        purpose: (j['purpose'] as String?) ?? '',
+        maxInstructions: j['maxInstructions'] as String?,
+      );
 }
 
 /// A single change in the medication regimen — used to build the timeline graph.
@@ -62,6 +127,20 @@ class MedicationEvent {
     required this.action,
     required this.detail,
   });
+
+  Map<String, dynamic> toJson() => {
+        'date': date.toIso8601String(),
+        'medication': medication,
+        'action': action,
+        'detail': detail,
+      };
+
+  factory MedicationEvent.fromJson(Map<String, dynamic> j) => MedicationEvent(
+        date: DateTime.tryParse((j['date'] as String?) ?? '') ?? DateTime(2000),
+        medication: (j['medication'] as String?) ?? '',
+        action: (j['action'] as String?) ?? '',
+        detail: (j['detail'] as String?) ?? '',
+      );
 }
 
 class LabResult {
@@ -74,6 +153,18 @@ class LabResult {
     required this.value,
     required this.unit,
   });
+
+  Map<String, dynamic> toJson() => {
+        'date': date.toIso8601String(),
+        'value': value,
+        'unit': unit,
+      };
+
+  factory LabResult.fromJson(Map<String, dynamic> j) => LabResult(
+        date: DateTime.tryParse((j['date'] as String?) ?? '') ?? DateTime(2000),
+        value: (j['value'] as num?)?.toDouble() ?? 0,
+        unit: (j['unit'] as String?) ?? '',
+      );
 }
 
 class SymptomFrequencyPoint {
@@ -84,138 +175,15 @@ class SymptomFrequencyPoint {
     required this.date,
     required this.episodesPerMonth,
   });
-}
 
-/// Sample fictional patient: 30yo woman with hypothyroidism and chronic migraine.
-final PatientProfile samplePatient = PatientProfile(
-  name: 'Jasmine Alvarez',
-  age: 30,
-  gender: 'Female',
-  heightCm: 165,
-  weightKg: 61.5,
-  conditions: const [
-    'Hypothyroidism',
-    'Chronic Migraine',
-    'Iron-deficiency anemia (mild)',
-  ],
-  currentMedications: const [
-    Medication(
-      name: 'Levothyroxine',
-      dose: '75 mcg',
-      frequency: 'Once daily, morning, empty stomach',
-      purpose: 'Hypothyroidism',
-    ),
-    Medication(
-      name: 'Sumatriptan',
-      dose: '50 mg',
-      frequency: 'As needed for migraine',
-      purpose: 'Acute migraine relief',
-      maxInstructions:
-          'Max 2 doses/day, at least 2 hours apart. Max 4 doses/month.',
-    ),
-    Medication(
-      name: 'Propranolol',
-      dose: '60 mg',
-      frequency: 'Twice daily',
-      purpose: 'Migraine prevention (prophylaxis)',
-    ),
-    Medication(
-      name: 'Vitamin D3',
-      dose: '1000 IU',
-      frequency: 'Once daily',
-      purpose: 'Vitamin D deficiency',
-    ),
-    Medication(
-      name: 'Ferrous sulfate',
-      dose: '325 mg',
-      frequency: 'Once daily, with food',
-      purpose: 'Iron-deficiency anemia',
-    ),
-  ],
-  medicationTimeline: [
-    MedicationEvent(
-      date: DateTime(2021, 3, 10),
-      medication: 'Levothyroxine',
-      action: 'Started',
-      detail: 'Diagnosed with hypothyroidism. Started 50 mcg daily.',
-    ),
-    MedicationEvent(
-      date: DateTime(2021, 9, 15),
-      medication: 'Levothyroxine',
-      action: 'Dose increased',
-      detail:
-          'TSH still elevated at 3-month follow-up. Increased to 75 mcg daily.',
-    ),
-    MedicationEvent(
-      date: DateTime(2022, 5, 2),
-      medication: 'Sumatriptan',
-      action: 'Started',
-      detail:
-          'Diagnosed with chronic migraine. Started 50 mg PRN for acute attacks.',
-    ),
-    MedicationEvent(
-      date: DateTime(2022, 11, 20),
-      medication: 'Vitamin D3',
-      action: 'Started',
-      detail: 'Bloodwork showed vitamin D deficiency. Started 1000 IU daily.',
-    ),
-    MedicationEvent(
-      date: DateTime(2023, 6, 8),
-      medication: 'Propranolol',
-      action: 'Started',
-      detail:
-          'Migraine frequency increasing (10/month). Started 40 mg twice daily for prevention.',
-    ),
-    MedicationEvent(
-      date: DateTime(2024, 2, 14),
-      medication: 'Ferrous sulfate',
-      action: 'Started',
-      detail:
-          'Routine labs showed mild iron-deficiency anemia. Started 325 mg daily.',
-    ),
-    MedicationEvent(
-      date: DateTime(2024, 8, 19),
-      medication: 'Propranolol',
-      action: 'Dose increased',
-      detail: 'Migraines still frequent. Increased to 60 mg twice daily.',
-    ),
-    MedicationEvent(
-      date: DateTime(2025, 1, 30),
-      medication: 'Levothyroxine',
-      action: 'Continued',
-      detail:
-          'TSH stable and within range. No dose change — remains at 75 mcg daily.',
-    ),
-    MedicationEvent(
-      date: DateTime(2026, 3, 5),
-      medication: 'All medications',
-      action: 'Annual review',
-      detail:
-          'All medications continued. Migraine frequency down to 2-3 episodes/month.',
-    ),
-  ],
-  tshHistory: [
-    LabResult(date: DateTime(2021, 3, 10), value: 8.2, unit: 'mIU/L'),
-    LabResult(date: DateTime(2021, 9, 15), value: 5.1, unit: 'mIU/L'),
-    LabResult(date: DateTime(2022, 3, 12), value: 3.2, unit: 'mIU/L'),
-    LabResult(date: DateTime(2022, 9, 10), value: 2.8, unit: 'mIU/L'),
-    LabResult(date: DateTime(2023, 3, 14), value: 2.5, unit: 'mIU/L'),
-    LabResult(date: DateTime(2023, 9, 9), value: 3.0, unit: 'mIU/L'),
-    LabResult(date: DateTime(2024, 3, 11), value: 2.7, unit: 'mIU/L'),
-    LabResult(date: DateTime(2024, 9, 16), value: 2.9, unit: 'mIU/L'),
-    LabResult(date: DateTime(2025, 3, 13), value: 2.6, unit: 'mIU/L'),
-    LabResult(date: DateTime(2025, 9, 8), value: 2.8, unit: 'mIU/L'),
-    LabResult(date: DateTime(2026, 3, 5), value: 2.5, unit: 'mIU/L'),
-  ],
-  migraineFrequency: [
-    SymptomFrequencyPoint(date: DateTime(2022, 5, 2), episodesPerMonth: 8),
-    SymptomFrequencyPoint(date: DateTime(2022, 11, 20), episodesPerMonth: 9),
-    SymptomFrequencyPoint(date: DateTime(2023, 6, 8), episodesPerMonth: 10),
-    SymptomFrequencyPoint(date: DateTime(2023, 12, 5), episodesPerMonth: 6),
-    SymptomFrequencyPoint(date: DateTime(2024, 6, 3), episodesPerMonth: 5),
-    SymptomFrequencyPoint(date: DateTime(2024, 12, 1), episodesPerMonth: 4),
-    SymptomFrequencyPoint(date: DateTime(2025, 6, 7), episodesPerMonth: 3),
-    SymptomFrequencyPoint(date: DateTime(2025, 12, 6), episodesPerMonth: 3),
-    SymptomFrequencyPoint(date: DateTime(2026, 6, 4), episodesPerMonth: 2),
-  ],
-);
+  Map<String, dynamic> toJson() => {
+        'date': date.toIso8601String(),
+        'episodesPerMonth': episodesPerMonth,
+      };
+
+  factory SymptomFrequencyPoint.fromJson(Map<String, dynamic> j) =>
+      SymptomFrequencyPoint(
+        date: DateTime.tryParse((j['date'] as String?) ?? '') ?? DateTime(2000),
+        episodesPerMonth: (j['episodesPerMonth'] as num?)?.toInt() ?? 0,
+      );
+}
