@@ -54,7 +54,8 @@ const String appClientId =
 /// serves Windows/Linux.
 
 List<String> get appRedirectUris => kIsWeb
-    ? ['${Uri.base.origin}/redirect.html']
+    // ? ['${Uri.base.origin}/redirect.html']
+    ? [Uri.base.resolve('redirect.html').toString()]
     : const [
         'com.example.newapp://redirect',
         'http://localhost:4400/redirect.html',
