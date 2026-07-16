@@ -52,11 +52,14 @@ Users can share specific health records with doctors by entering their WebID, gr
 We invite the judges to test our live web app prototype. Follow these simple steps to experience BioPod:
 
 1. **Open the Live Demo:** Navigate to [https://eva0628.github.io/MedicalApp/](https://eva0628.github.io/MedicalApp/)
-2. **Launch App:** Tap **Login** on the welcome screen.
-3. **Provider Details:** Enter your Solid Pod provider address (e.g., `https://pods.solidcommunity.au`) and tap **Continue**.
-4. **Authentication:** Enter your Pod email and password on the login page that opens.
-5. **Authorization:** Tap **Authorize** (or *Consent*) to allow BioPod to access your Pod.
-6. **Start Tracking:** You will be redirected back into the app. You are now securely signed in and ready to add or view health records directly from your Pod!
+2. **Install the Web App (Recommended):** For the best experience, click the **install popup** that appears in the **top-right corner** of your browser's address bar to install BioPod as a web app. This ensures the app runs correctly and the Pod authentication redirect works smoothly.
+3. **Launch App:** Tap **Login** on the welcome screen.
+4. **Provider Details:** Enter your Solid Pod provider address (e.g., `https://pods.solidcommunity.au`) and tap **Continue**.
+5. **Authentication:** Enter your Pod email and password on the login page that opens.
+6. **Authorization:** Tap **Authorize** (or *Consent*) to allow BioPod to access your Pod.
+7. **Start Tracking:** You will be redirected back into the app. You are now securely signed in and ready to add or view health records directly from your Pod!
+
+> ⚠️ **Note on Empty Dashboards:** BioPod reads and writes data **directly from your own Solid Pod** — we do not host any of your data on a central server. When you first sign in, your Pod contains no health records yet, so the dashboard, trends, and risk prediction screens will appear **blank**. Please **add a few health records first** (via the *Add Record* screen), and the dashboard and analytics will populate automatically.
 
 ---
 
