@@ -10,16 +10,18 @@ import 'package:flutter/material.dart';
 import 'package:solidui/solidui.dart';
 
 import 'package:newapp/constants/app.dart';
-import 'package:newapp/screens/browse_files.dart';
-import 'package:newapp/screens/add_note.dart';
+// import 'package:newapp/screens/browse_files.dart';
+// import 'package:newapp/screens/add_note.dart'; // temporarily hidden
 import 'package:newapp/screens/add_health_record.dart';
 import 'package:newapp/screens/appointments.dart';
-import 'package:newapp/screens/dataset_dashboard.dart';
+// import 'package:newapp/screens/dataset_dashboard.dart';
 import 'package:newapp/screens/health_dashboard.dart';
 import 'package:newapp/screens/health_prediction.dart';
+import 'package:newapp/screens/health_resources.dart';
 import 'package:newapp/screens/health_score_calculator.dart';
 import 'package:newapp/screens/health_timeline.dart';
-import 'package:newapp/screens/view_notes.dart';
+import 'package:newapp/screens/view_health_record.dart';
+// import 'package:newapp/screens/view_notes.dart'; // temporarily hidden
 
 final _scaffoldController = SolidScaffoldController();
 
@@ -39,8 +41,8 @@ class AppScaffold extends StatelessWidget {
       // The navigation menu drives the side navigation rail (and the drawer on
       // narrow screens). Each entry exposes a top-level page of the app.
 
-      menu: const [
-        SolidMenuItem(
+      menu: [
+        const SolidMenuItem(
           icon: Icons.home,
           title: 'Home',
           tooltip: '''
@@ -53,55 +55,57 @@ class AppScaffold extends StatelessWidget {
             ''',
           child: HealthDashboard(),
         ),
-        SolidMenuItem(
-          icon: Icons.folder,
-          title: 'App Files',
+        // const SolidMenuItem(
+        //   icon: Icons.folder,
+        //   title: 'App Files',
+        //   tooltip: '''
+
+        //     **Files**
+
+        //     Tap here to browse the files on your POD for this app.
+
+        //     ''',
+        //   child: SolidFile(uploadConfig: appUploadConfig),
+        // ),
+        // const SolidMenuItem(
+        //   icon: Icons.storage,
+        //   title: 'All POD Files',
+        //   tooltip: '''
+
+        //     **All Files**
+
+        //     Tap here to browse all folders on your POD from the root.
+
+        //     ''',
+        //   child: BrowseFiles(),
+        // ),
+        // NOTE: Add Note is temporarily hidden from the web app navigation.
+        // Re-enable this menu item to bring the feature back.
+        // const SolidMenuItem(
+        //   icon: Icons.note_add,
+        //   title: 'Add Note',
+        //   tooltip: '''
+        //
+        //     **Add Note**
+        //
+        //     Tap here to add a titled note to your POD, encrypted.
+        //
+        //     ''',
+        //   child: AddNote(),
+        // ),
+        const SolidMenuItem(
+          icon: Icons.event_available,
+          title: 'Appointments',
           tooltip: '''
 
-            **Files**
+            **Appointments**
 
-            Tap here to browse the files on your POD for this app.
-
-            ''',
-          child: SolidFile(uploadConfig: appUploadConfig),
-        ),
-        SolidMenuItem(
-          icon: Icons.storage,
-          title: 'All POD Files',
-          tooltip: '''
-
-            **All Files**
-
-            Tap here to browse all folders on your POD from the root.
+            Tap here to view your upcoming and past medical appointments.
 
             ''',
-          child: BrowseFiles(),
+          child: AppointmentsScreen(),
         ),
-        SolidMenuItem(
-          icon: Icons.note_add,
-          title: 'Add Note',
-          tooltip: '''
-
-            **Add Note**
-
-            Tap here to add a titled note to your POD, encrypted.
-
-            ''',
-          child: AddNote(),
-        ),
-        SolidMenuItem(
-          icon: Icons.monitor_heart,
-          title: 'Add Health Record',
-          tooltip: '''
-
-            **Add Health Record**
-
-            Tap here to record health metrics to your POD, encrypted.
-
-            ''',
-          child: AddHealthRecord(),
-        ),
-        SolidMenuItem(
+        const SolidMenuItem(
           icon: Icons.timeline,
           title: 'Health Timeline',
           tooltip: '''
@@ -114,7 +118,7 @@ class AppScaffold extends StatelessWidget {
             ''',
           child: HealthTimelineScreen(),
         ),
-        SolidMenuItem(
+        const SolidMenuItem(
           icon: Icons.calculate,
           title: 'Health Score',
           tooltip: '''
@@ -127,7 +131,7 @@ class AppScaffold extends StatelessWidget {
             ''',
           child: HealthScoreCalculator(),
         ),
-        SolidMenuItem(
+        const SolidMenuItem(
           icon: Icons.insights,
           title: 'Risk Prediction',
           tooltip: '''
@@ -140,42 +144,70 @@ class AppScaffold extends StatelessWidget {
             ''',
           child: HealthPrediction(),
         ),
-        SolidMenuItem(
-          icon: Icons.bar_chart,
-          title: 'Population Insights',
+        // const SolidMenuItem(
+        //   icon: Icons.bar_chart,
+        //   title: 'Population Insights',
+        //   tooltip: '''
+
+        //     **Population Insights**
+
+        //     Tap here to explore the bundled healthcare dataset: patient counts,
+        //     test results, billing and age distributions.
+
+        //     ''',
+        //   child: DatasetDashboard(),
+        // ),
+        const SolidMenuItem(
+          icon: Icons.monitor_heart,
+          title: 'View Health Records',
           tooltip: '''
 
-            **Population Insights**
+            **View Health Records**
 
-            Tap here to explore the bundled healthcare dataset: patient counts,
-            test results, billing and age distributions.
+            Tap here to read back the health records you have saved to your
+            POD, with key metrics and full details.
 
             ''',
-          child: DatasetDashboard(),
+          child: ViewHealthRecord(),
+        ),
+        // NOTE: View Notes is temporarily hidden from the web app navigation.
+        // Re-enable this menu item to bring the feature back.
+        // const SolidMenuItem(
+        //   icon: Icons.notes,
+        //   title: 'View Notes',
+        //   tooltip: '''
+        //
+        //     **View Notes**
+        //
+        //     Tap here to read back the notes you have saved to your POD.
+        //
+        //     ''',
+        //   child: ViewNotes(),
+        // ),
+        const SolidMenuItem(
+          icon: Icons.monitor_heart,
+          title: 'Add Health Record',
+          tooltip: '''
+
+            **Add Health Record**
+
+            Tap here to record health metrics to your POD, encrypted.
+
+            ''',
+          child: AddHealthRecord(),
         ),
         SolidMenuItem(
-          icon: Icons.notes,
-          title: 'View Notes',
+          icon: Icons.help_outline,
+          title: 'Resources',
           tooltip: '''
 
-            **View Notes**
+            **Resources**
 
-            Tap here to read back the notes you have saved to your POD.
-
-            ''',
-          child: ViewNotes(),
-        ),
-        SolidMenuItem(
-          icon: Icons.event_available,
-          title: 'Appointments',
-          tooltip: '''
-
-            **Appointments**
-
-            Tap here to view your upcoming and past medical appointments.
+            Tap here for health reference guides, external support links,
+            in-app tools and a note on how your data is stored.
 
             ''',
-          child: AppointmentsScreen(),
+          child: HealthResources(controller: _scaffoldController),
         ),
       ],
       appBar: SolidAppBarConfig(
