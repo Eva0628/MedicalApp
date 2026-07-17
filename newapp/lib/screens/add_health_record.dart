@@ -13,6 +13,8 @@ import 'package:solidpod/solidpod.dart';
 
 import 'package:solidui/solidui.dart';
 
+import 'package:newapp/constants/theme.dart';
+
 class AddHealthRecord extends StatefulWidget {
   const AddHealthRecord({super.key});
 
@@ -134,7 +136,7 @@ class _AddHealthRecordState extends State<AddHealthRecord> {
       messenger.showSnackBar(
         const SnackBar(
           content: Text('Health record saved to POD.'),
-          backgroundColor: Colors.green,
+          backgroundColor: AppColors.good,
         ),
       );
 
@@ -156,7 +158,7 @@ class _AddHealthRecordState extends State<AddHealthRecord> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('You need to be logged in to save a health record.'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.bad,
         ),
       );
     } on AccessForbiddenException {
@@ -164,7 +166,7 @@ class _AddHealthRecordState extends State<AddHealthRecord> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Permission denied while saving the health record.'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.bad,
         ),
       );
     } on Exception catch (e) {
@@ -172,7 +174,7 @@ class _AddHealthRecordState extends State<AddHealthRecord> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to save health record: $e'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.bad,
         ),
       );
     } finally {

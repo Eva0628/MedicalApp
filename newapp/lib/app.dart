@@ -11,6 +11,7 @@ import 'package:solidui/solidui.dart';
 
 import 'package:newapp/app_scaffold.dart';
 import 'package:newapp/constants/app.dart';
+import 'package:newapp/constants/theme.dart';
 
 // This widget is the root of the application. On startup it calls upon
 // [SolidLogin] to connect to the user's Pod stored within their data vault on
@@ -29,12 +30,7 @@ class App extends StatelessWidget {
 
       title: appTitle,
 
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF007AFF),
-        ),
-        useMaterial3: true,
-      ),
+      theme: buildAppTheme(),
 
       home: SolidLogin(
         title: 'BioPod\nYour Health Data, Your POD',

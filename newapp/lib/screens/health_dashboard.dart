@@ -14,6 +14,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:newapp/constants/theme.dart';
 
 import 'package:solidpod/solidpod.dart';
 
@@ -147,7 +148,7 @@ class _HealthDashboardState extends State<HealthDashboard> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('You need to be logged in to view the dashboard.'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.bad,
         ),
       );
     } on AccessForbiddenException {
@@ -155,7 +156,7 @@ class _HealthDashboardState extends State<HealthDashboard> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Permission denied while reading records.'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.bad,
         ),
       );
     } on Exception catch (e) {
@@ -163,7 +164,7 @@ class _HealthDashboardState extends State<HealthDashboard> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to load records: $e'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.bad,
         ),
       );
     } finally {
@@ -219,13 +220,15 @@ class _HealthDashboardState extends State<HealthDashboard> {
     final chrono = _records.reversed.toList();
     final xLabels = chrono.map((r) => _shortDate(r.timestamp)).toList();
 
-    // Distinct, accessible colours for the trend lines (kept readable in both
-    // light and dark themes).
-    const weightColor = Color(0xFF2E7D6B); // teal
-    const systolicColor = Color(0xFFD32F2F); // red
-    const diastolicColor = Color(0xFF1976D2); // blue
-    const hrColor = Color(0xFFE64A19); // deep orange
-    const sleepColor = Color(0xFF7B1FA2); // purple
+    // Trend-line colours, all drawn from the shared clinical palette so the
+    // dashboard matches the rest of the app. Single-series charts use the teal
+    // primary; the two-line blood-pressure chart pairs the teal primary with
+    // the dark heading tone so systolic and diastolic stay distinct.
+    const weightColor = AppColors.primary;
+    const systolicColor = AppColors.primary;
+    const diastolicColor = AppColors.heading;
+    const hrColor = AppColors.primary;
+    const sleepColor = AppColors.primary;
 
     return RefreshIndicator(
       onRefresh: _loadRecords,

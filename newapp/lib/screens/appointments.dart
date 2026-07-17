@@ -13,6 +13,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:newapp/constants/theme.dart';
 
 /// A single appointment record.
 class Appointment {
@@ -55,11 +56,11 @@ extension AppointmentStatusX on AppointmentStatus {
       case AppointmentStatus.upcoming:
         return scheme.primary;
       case AppointmentStatus.completed:
-        return Colors.green.shade600;
+        return AppColors.good;
       case AppointmentStatus.cancelled:
         return scheme.error;
       case AppointmentStatus.missed:
-        return Colors.orange.shade700;
+        return AppColors.warn;
     }
   }
 }

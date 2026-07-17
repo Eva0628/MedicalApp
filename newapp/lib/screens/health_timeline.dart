@@ -14,6 +14,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:newapp/constants/theme.dart';
 
 import 'package:solidpod/solidpod.dart';
 
@@ -57,7 +58,7 @@ class _HealthTimelineScreenState extends State<HealthTimelineScreen> {
   void _snack(String message) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.red),
+      SnackBar(content: Text(message), backgroundColor: AppColors.bad),
     );
   }
 
@@ -120,7 +121,7 @@ class _HealthTimelineScreenState extends State<HealthTimelineScreen> {
                     .map((r) => ChartPoint(r.date, r.value))
                     .toList(),
                 unit: patient.tshHistory.first.unit,
-                lineColor: const Color(0xFF2E7D6B),
+                lineColor: AppColors.primary,
               ),
             ),
           ],
@@ -136,7 +137,7 @@ class _HealthTimelineScreenState extends State<HealthTimelineScreen> {
                     )
                     .toList(),
                 unit: '/mo',
-                lineColor: Colors.deepOrange,
+                lineColor: AppColors.heading,
               ),
             ),
           ],

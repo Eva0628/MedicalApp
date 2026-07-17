@@ -13,6 +13,7 @@ library;
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:newapp/constants/theme.dart';
 
 import 'package:solidpod/solidpod.dart';
 import 'package:solidui/solidui.dart';
@@ -132,7 +133,7 @@ class _ManagePatientProfileState extends State<ManagePatientProfile> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: isError ? Colors.red : Colors.green,
+        backgroundColor: isError ? AppColors.bad : AppColors.good,
       ),
     );
   }
@@ -180,6 +181,9 @@ class _ManagePatientProfileState extends State<ManagePatientProfile> {
         kPatientProfileFileName,
         jsonEncode(profile.toJson()),
         encrypted: true,
+        // The profile lives at a fixed filename, so saving again after the
+        // first time means updating the existing file, not creating a new one.
+        overwrite: true,
       );
       _snack('Profile saved to your POD.');
     } on NotLoggedInException {

@@ -51,6 +51,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:newapp/constants/theme.dart';
 import 'package:solidpod/solidpod.dart';
 import 'package:solidui/solidui.dart';
 
@@ -231,7 +232,7 @@ class _SeedJasmineDataState extends State<SeedJasmineData> {
             'Imported ${jasmineAlvarezRecords.length} records for '
             'Jasmine Alvarez.',
           ),
-          backgroundColor: Colors.green,
+          backgroundColor: AppColors.good,
         ),
       );
     } on Exception catch (e) {
@@ -277,7 +278,7 @@ class _SeedJasmineDataState extends State<SeedJasmineData> {
                 ),
               if (_error != null) ...[
                 const SizedBox(height: 12),
-                Text(_error!, style: const TextStyle(color: Colors.red)),
+                Text(_error!, style: const TextStyle(color: AppColors.bad)),
               ],
             ],
           ),

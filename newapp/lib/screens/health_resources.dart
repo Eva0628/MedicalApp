@@ -12,6 +12,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:newapp/constants/theme.dart';
 
 import 'package:solidpod/solidpod.dart';
 
@@ -210,7 +211,7 @@ class _HealthResourcesState extends State<HealthResources> {
         messenger.showSnackBar(
           SnackBar(
             content: Text('Could not open $url'),
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.bad,
           ),
         );
       }
@@ -218,7 +219,7 @@ class _HealthResourcesState extends State<HealthResources> {
       messenger.showSnackBar(
         SnackBar(
           content: Text('Failed to open link: $e'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.bad,
         ),
       );
     }

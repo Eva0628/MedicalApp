@@ -17,6 +17,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:newapp/constants/theme.dart';
 import 'package:flutter/services.dart';
 
 import 'package:csv/csv.dart';
@@ -469,15 +470,10 @@ _Prediction _scoreRecord(HealthRecord r) {
   return _Prediction(score: score, factors: factors);
 }
 
-/// Maps a normalised risk `t` (0..1) onto a green → amber → red gradient
-/// (low risk is green).
-Color _riskColor(double t) {
-  const green = Color(0xFF43A047);
-  const amber = Color(0xFFFB8C00);
-  const red = Color(0xFFE53935);
-  if (t <= 0.5) return Color.lerp(green, amber, t / 0.5)!;
-  return Color.lerp(amber, red, (t - 0.5) / 0.5)!;
-}
+/// Maps a normalised risk `t` (0..1) onto the shared grade scale, inverted so
+/// low risk reads green and high risk reads red (the score gauge uses the same
+/// scale the other way round).
+Color _riskColor(double t) => AppColors.grade(1 - t);
 
 // ── Dataset cohort (parsed in a background isolate) ──────────────────────────
 

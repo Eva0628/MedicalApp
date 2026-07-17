@@ -5,6 +5,7 @@ library;
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:newapp/constants/theme.dart';
 
 import 'package:solidpod/solidpod.dart';
 
@@ -59,7 +60,7 @@ class _AddNoteState extends State<AddNote> {
       messenger.showSnackBar(
         const SnackBar(
           content: Text('Note saved to POD.'),
-          backgroundColor: Colors.green,
+          backgroundColor: AppColors.good,
         ),
       );
 
@@ -70,7 +71,7 @@ class _AddNoteState extends State<AddNote> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('You need to be logged in to save a note.'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.bad,
         ),
       );
     } on AccessForbiddenException {
@@ -78,7 +79,7 @@ class _AddNoteState extends State<AddNote> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Permission denied while saving the note.'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.bad,
         ),
       );
     } on Exception catch (e) {
@@ -86,7 +87,7 @@ class _AddNoteState extends State<AddNote> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to save note: $e'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.bad,
         ),
       );
     } finally {

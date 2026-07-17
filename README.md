@@ -69,4 +69,22 @@ We invite the judges to test our live web app prototype. Follow these simple ste
 * **Security:** WAC / ACP (Web Access Control)
 
 ---
+
+## 📄 License
+
+BioPod is free and open-source software licensed under the
+**[GNU Affero General Public License v3.0](./LICENSE)** (AGPL-3.0).
+
+You are free to use, study, modify and distribute this code, with one core
+condition: **anything you build on it must also be released as open source
+under the same license.** Because AGPL-3.0 is a *network* copyleft license,
+this holds even if you only run a modified version as a hosted web service —
+in that case you must offer your users the corresponding source code.
+
+In short: use it, improve it, but keep it open. See the [LICENSE](./LICENSE)
+file for the full terms.
+
+Copyright © 2026 the BioPod authors.
+
+---
 *Created with ❤️ for SOLID Hackathon 2026*

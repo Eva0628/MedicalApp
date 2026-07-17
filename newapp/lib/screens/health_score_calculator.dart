@@ -11,17 +11,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-/// A small clinical accent palette specific to this page. Kept local so the
-/// calculator reads as a calm "checkup" screen regardless of the app theme.
-class _Clinical {
-  const _Clinical._();
-
-  static const Color background = Color(0xFFF4F9FB);
-  static const Color card = Colors.white;
-  static const Color primary = Color(0xFF0091A6); // teal
-  static const Color heading = Color(0xFF0F3B4C);
-  static const Color subtle = Color(0xFF5B7784);
-}
+import 'package:newapp/constants/theme.dart';
 
 /// Specification for a single numeric input on the form.
 class _FieldSpec {
@@ -172,7 +162,7 @@ class _HealthScoreCalculatorState extends State<HealthScoreCalculator> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: _Clinical.background,
+      color: AppColors.background,
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Center(
@@ -219,7 +209,7 @@ class _HealthScoreCalculatorState extends State<HealthScoreCalculator> {
 
   Widget _buildForm(BuildContext context) {
     return Card(
-      color: _Clinical.card,
+      color: AppColors.card,
       child: Padding(
         padding: const EdgeInsets.all(32.0),
         child: Form(
@@ -234,7 +224,7 @@ class _HealthScoreCalculatorState extends State<HealthScoreCalculator> {
                     const Icon(
                       Icons.local_hospital,
                       size: 64,
-                      color: _Clinical.primary,
+                      color: AppColors.primary,
                     ),
                     const SizedBox(height: 16),
                     Text(
@@ -242,7 +232,7 @@ class _HealthScoreCalculatorState extends State<HealthScoreCalculator> {
                       textAlign: TextAlign.center,
                       style:
                           Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                color: _Clinical.heading,
+                                color: AppColors.heading,
                                 fontWeight: FontWeight.w600,
                               ),
                     ),
@@ -252,7 +242,7 @@ class _HealthScoreCalculatorState extends State<HealthScoreCalculator> {
                       'wellbeing check-up.',
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: _Clinical.subtle,
+                            color: AppColors.subtle,
                           ),
                     ),
                   ],
@@ -268,7 +258,7 @@ class _HealthScoreCalculatorState extends State<HealthScoreCalculator> {
                 width: double.infinity,
                 child: FilledButton.icon(
                   style: FilledButton.styleFrom(
-                    backgroundColor: _Clinical.primary,
+                    backgroundColor: AppColors.primary,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
                   onPressed: _onCalculate,
@@ -292,9 +282,9 @@ class _HealthScoreCalculatorState extends State<HealthScoreCalculator> {
         helperText: spec.helper,
         border: const OutlineInputBorder(),
         focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: _Clinical.primary, width: 2),
+          borderSide: BorderSide(color: AppColors.primary, width: 2),
         ),
-        labelStyle: const TextStyle(color: _Clinical.subtle),
+        labelStyle: const TextStyle(color: AppColors.subtle),
       ),
       validator: (value) => _validate(value, spec),
     );
@@ -302,7 +292,7 @@ class _HealthScoreCalculatorState extends State<HealthScoreCalculator> {
 
   Widget _buildResult(BuildContext context, double rawScore) {
     final clamped = rawScore.clamp(0.0, 100.0);
-    final color = _scoreColor(clamped / 100);
+    final color = AppColors.grade(clamped / 100);
     final bandIndex =
         (clamped <= 0 ? 0 : (clamped / 10).ceil() - 1).clamp(0, 9);
     final message = _bandMessages[bandIndex];
@@ -310,7 +300,7 @@ class _HealthScoreCalculatorState extends State<HealthScoreCalculator> {
     return Column(
       children: [
         Card(
-          color: _Clinical.card,
+          color: AppColors.card,
           child: Padding(
             padding: const EdgeInsets.all(32.0),
             child: Column(
@@ -318,7 +308,7 @@ class _HealthScoreCalculatorState extends State<HealthScoreCalculator> {
                 Text(
                   'Your Health Score',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: _Clinical.heading,
+                        color: AppColors.heading,
                         fontWeight: FontWeight.w600,
                       ),
                 ),
@@ -329,7 +319,7 @@ class _HealthScoreCalculatorState extends State<HealthScoreCalculator> {
                     painter: _GaugePainter(
                       value: clamped / 100,
                       color: color,
-                      trackColor: const Color(0xFFE2ECF0),
+                      trackColor: AppColors.border,
                     ),
                     child: Align(
                       alignment: Alignment.bottomCenter,
@@ -352,7 +342,7 @@ class _HealthScoreCalculatorState extends State<HealthScoreCalculator> {
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium
-                                  ?.copyWith(color: _Clinical.subtle),
+                                  ?.copyWith(color: AppColors.subtle),
                             ),
                           ],
                         ),
@@ -364,7 +354,7 @@ class _HealthScoreCalculatorState extends State<HealthScoreCalculator> {
                 Text(
                   'Raw computed value: ${rawScore.toStringAsFixed(1)}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: _Clinical.subtle,
+                        color: AppColors.subtle,
                       ),
                 ),
               ],
@@ -395,7 +385,7 @@ class _HealthScoreCalculatorState extends State<HealthScoreCalculator> {
               child: Text(
                 message,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: _Clinical.heading,
+                      color: AppColors.heading,
                       height: 1.4,
                     ),
               ),
@@ -410,17 +400,6 @@ class _HealthScoreCalculatorState extends State<HealthScoreCalculator> {
 /// Formats a range bound without a trailing `.0` for whole numbers.
 String _trim(double value) =>
     value == value.roundToDouble() ? value.toStringAsFixed(0) : '$value';
-
-/// Maps a normalised score `t` (0..1) onto a red → yellow → green gradient.
-Color _scoreColor(double t) {
-  const red = Color(0xFFE53935);
-  const yellow = Color(0xFFFDD835);
-  const green = Color(0xFF43A047);
-  if (t <= 0.5) {
-    return Color.lerp(red, yellow, t / 0.5)!;
-  }
-  return Color.lerp(yellow, green, (t - 0.5) / 0.5)!;
-}
 
 /// Paints a 180° top-semicircle gauge: a soft background track overlaid by a
 /// value arc drawn in [color], from the left (0) to the right (100).

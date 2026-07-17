@@ -7,6 +7,7 @@ library;
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:newapp/constants/theme.dart';
 
 import 'package:solidpod/solidpod.dart';
 
@@ -103,7 +104,7 @@ class _ViewNotesState extends State<ViewNotes> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('You need to be logged in to view notes.'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.bad,
         ),
       );
     } on AccessForbiddenException {
@@ -111,7 +112,7 @@ class _ViewNotesState extends State<ViewNotes> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Permission denied while reading notes.'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.bad,
         ),
       );
     } on Exception catch (e) {
@@ -119,7 +120,7 @@ class _ViewNotesState extends State<ViewNotes> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to load notes: $e'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.bad,
         ),
       );
     } finally {

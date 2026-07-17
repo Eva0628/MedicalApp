@@ -15,6 +15,7 @@ library;
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:newapp/constants/theme.dart';
 
 import 'package:solidpod/solidpod.dart';
 
@@ -136,7 +137,7 @@ class _ViewHealthRecordState extends State<ViewHealthRecord> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('You need to be logged in to view health records.'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.bad,
         ),
       );
     } on AccessForbiddenException {
@@ -144,7 +145,7 @@ class _ViewHealthRecordState extends State<ViewHealthRecord> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Permission denied while reading health records.'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.bad,
         ),
       );
     } on Exception catch (e) {
@@ -152,7 +153,7 @@ class _ViewHealthRecordState extends State<ViewHealthRecord> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to load health records: $e'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.bad,
         ),
       );
     } finally {
